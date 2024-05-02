@@ -17,17 +17,17 @@ void temp::temp2()
 	int thickness = 4;
 	int thickness2 = 10;
 
-	std::vector<cv::Mat> Apr29(10), Apr30(20), May1(30), May2(15);
+	std::vector<cv::Mat> /*Apr29(10), Apr30(20), May1(30),*/ May2(120);
 	std::vector<std::vector<cv::Mat>> all;
-	all.push_back(Apr29);
-	all.push_back(Apr30);
-	all.push_back(May1);
+	//all.push_back(Apr29);
+	//all.push_back(Apr30);
+	//all.push_back(May1);
 	all.push_back(May2);
 
 	std::tm timeinfo = {};
 	timeinfo.tm_year = 2024 - 1900; // 연도는 1900년부터 시작하므로 2024년 - 1900
-	timeinfo.tm_mon = 4 - 1; // 월은 0부터 시작하므로 5월 - 1
-	timeinfo.tm_mday = 29; // 일
+	timeinfo.tm_mon = 5 - 1; // 월은 0부터 시작하므로 5월 - 1
+	timeinfo.tm_mday = 2; // 일
 	timeinfo.tm_hour = 0; // 시
 	timeinfo.tm_min = 0; // 분
 	timeinfo.tm_sec = 45; // 초
@@ -38,7 +38,7 @@ void temp::temp2()
 	auto timePoint = std::chrono::system_clock::from_time_t(time_t);
 
 	auto twentyMinutes = std::chrono::minutes(20);
-
+	int indicator = 0;
 	for (std::vector<cv::Mat> temps : all) {
 
 		for (cv::Mat temps2 : temps)
@@ -54,19 +54,47 @@ void temp::temp2()
 			ss << std::put_time(&timeinfo, "%Y%m%d-%H%M%S");
 			std::string formattedDate = ss.str();
 
-			text = "192.168.1.1_" + formattedDate + "-" + a + b + c;
+			text = "192.168.1.1_O_";
+			
 			if (d == 0) {
-				text += "_P.png";
+				text += formattedDate + "-" + a + b + c;
+				text += "_P";
+				text += "_V" + std::to_string(indicator + 1);
+				indicator++;
+				indicator %= 4;
+				text += ".png";
+
+				temps2 = Oimg.clone();
+				cv::putText(temps2, text, origin, fontFace, fontScale, color, thickness);
+				cv::imwrite("./0502/" + text, temps2);
+
+				std::time_t time = mktime(&timeinfo) + 2 * 60;
+				localtime_s(&timeinfo, &time);
 			}
 			else {
-				text += "_F_etc.png";
-			}
-			temps2 = Oimg.clone();
-			cv::putText(temps2, text, origin, fontFace, fontScale, color, thickness);
-			cv::imwrite(text, temps2);
+				text += formattedDate + "-" + a + b + c;
+				temps2 = Oimg.clone();
+				cv::Mat tttt = temps2.clone();
+				std::string text2 = "192.168.1.1_R_";
+				text2 += formattedDate + "-" + a + b + c;
+				text += "_F";
+				text2 += "_F";
+				text += "_V" + std::to_string(indicator + 1);
+				text2 += "_V" + std::to_string(indicator + 1);
+				indicator++;
+				indicator %= 4;
+				text += "_etc.png";
+				text2 += "_etc.png";
+				
+				cv::putText(temps2, text, origin, fontFace, fontScale, color, thickness);
+				cv::imwrite("./0502/" + text, temps2);
+				cv::putText(tttt, text2, origin, fontFace, fontScale, color, thickness);
+				cv::imwrite("./0502/" + text2, tttt);
 
-			std::time_t time = mktime(&timeinfo) + 20 * 60;
-			localtime_s(&timeinfo, &time);
+				std::time_t time = mktime(&timeinfo) + 2 * 60;
+				localtime_s(&timeinfo, &time);
+			}
+			
 
 		}
 

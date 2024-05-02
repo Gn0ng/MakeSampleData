@@ -11,6 +11,7 @@
 
 class temp
 {
+public:
 	void temp2();
 };
 
