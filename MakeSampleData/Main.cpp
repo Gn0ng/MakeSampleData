@@ -5,11 +5,11 @@
 
 
 
-int main() 
+int main()
 {
 
 	cv::Mat Oimg, Pimg;
-	
+
 	Oimg = cv::imread("_O_img_NG_MDL-1_20240409(12)_240409113514.bmp");
 	Pimg = cv::imread("_P_img_NG_MDL-1_20240409(12)_240409113514.bmp");
 
@@ -67,12 +67,12 @@ int main()
 		}
 	}
 
-		//cv::waitKey();
-		//cv::destroyAllWindows();
-
-
 	//cv::waitKey();
 	//cv::destroyAllWindows();
+
+
+//cv::waitKey();
+//cv::destroyAllWindows();
 
 
 
